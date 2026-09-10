@@ -12,12 +12,16 @@ st.set_page_config(
 )
 
 st.title("🎬 영화 데이터 그래프 도감 1 - 시간")
-st.write("일별 박스오피스 데이터를 이용해 영화의 관객 변화를 살펴봅니다.")
+
+st.write(
+    "일별 박스오피스 데이터를 이용하여 영화의 시간에 따른 변화를 살펴봅니다."
+)
 
 # ----------------------------------------
 # 데이터 불러오기
 # ----------------------------------------
 DATA_URL = "https://raw.githubusercontent.com/greatsong/modudata/main/data/kobis_daily.csv"
+
 
 @st.cache_data
 def load_data():
@@ -40,11 +44,15 @@ def load_data():
     ]
 
     for col in numeric_columns:
-        df[col] = pd.to_numeric(df[col], errors="coerce")
+        df[col] = pd.to_numeric(
+            df[col],
+            errors="coerce"
+        )
 
     return df
 
 
+# 데이터 불러오기
 try:
     df = load_data()
 
@@ -54,28 +62,36 @@ except Exception as e:
     st.stop()
 
 
-# ----------------------------------------
+# ========================================
 # 그래프 1
-# ----------------------------------------
+# ========================================
 st.header("📊 그래프 1. 영화별 날짜에 따른 일관객 변화")
 
 st.write(
-    "영화를 하나 선택하면 해당 영화가 날짜별로 얼마나 많은 관객을 모았는지 확인할 수 있습니다."
+    "영화를 선택하면 해당 영화의 날짜별 일관객 변화를 확인할 수 있습니다."
 )
 
-# 영화 목록
-movie_list = sorted(df["영화명"].dropna().unique())
+# 영화 선택
+movie_list = sorted(
+    df["영화명"].dropna().unique()
+)
 
 selected_movie = st.selectbox(
     "영화를 선택하세요.",
     movie_list
 )
 
-# 선택한 영화 데이터
-movie_df = df[df["영화명"] == selected_movie].copy()
+# 선택한 영화의 데이터만 추출
+movie_df = df[
+    df["영화명"] == selected_movie
+].copy()
+
 movie_df = movie_df.sort_values("날짜")
 
-# 그래프
+
+# ----------------------------------------
+# 선 그래프
+# ----------------------------------------
 fig = px.line(
     movie_df,
     x="날짜",
@@ -85,22 +101,22 @@ fig = px.line(
     labels={
         "날짜": "날짜",
         "일관객": "일관객 수"
-    },
-    hover_data={
-        "날짜": "|%Y-%m-%d",
-        "일관객": ":,"
     }
 )
 
+# 마우스를 올렸을 때 표시되는 정보
 fig.update_traces(
-    hovertemplate="날짜: %{x}<br>일관객: %{y:,}명<extra></extra>"
+    hovertemplate=
+    "날짜: %{x|%Y-%m-%d}<br>"
+    "일관객: %{y:,}명"
+    "<extra></extra>"
 )
 
 fig.update_layout(
+    height=500,
     hovermode="x unified",
     xaxis_title="날짜",
-    yaxis_title="일관객 수(명)",
-    height=500
+    yaxis_title="일관객 수(명)"
 )
 
 st.plotly_chart(
@@ -108,32 +124,62 @@ st.plotly_chart(
     use_container_width=True
 )
 
+
+# ----------------------------------------
 # 그래프로 알 수 있는 것
-st.markdown("### 💡 이 그래프로 알 수 있는 것")
-st.info("선택한 영화의 날짜별 일관객 변화를 통해 관객이 증가하거나 감소하는 시점을 확인할 수 있습니다.")
-
-
 # ----------------------------------------
+st.subheader("💡 이 그래프로 알 수 있는 것")
+
+graph1_comment = st.text_area(
+    "이 그래프를 보고 알 수 있는 내용을 직접 작성하세요.",
+    placeholder="예: 영화 개봉 초기에는 관객 수가 많았지만 시간이 지나면서 점차 감소하는 것을 알 수 있다.",
+    height=100,
+    key="graph1_comment"
+)
+
+if graph1_comment:
+    st.info(graph1_comment)
+
+
+# ========================================
 # 그래프 2
-# ----------------------------------------
-st.header("📈 그래프 2. 추가 예정")
+# ========================================
+st.divider()
+
+st.header("📈 그래프 2")
 
 st.write(
-    "앞으로 새로운 영화 데이터 그래프를 이 구역에 추가할 수 있습니다."
+    "두 번째 그래프를 추가할 수 있는 공간입니다."
 )
 
-st.markdown("### 💡 이 그래프로 알 수 있는 것")
-st.info("추가할 그래프를 통해 영화 데이터의 다른 특징을 비교하고 분석할 수 있습니다.")
+graph2_comment = st.text_area(
+    "이 그래프로 알 수 있는 것",
+    placeholder="그래프를 추가한 뒤, 이 그래프를 통해 알 수 있는 내용을 작성하세요.",
+    height=100,
+    key="graph2_comment"
+)
+
+if graph2_comment:
+    st.info(graph2_comment)
 
 
-# ----------------------------------------
+# ========================================
 # 그래프 3
-# ----------------------------------------
-st.header("📉 그래프 3. 추가 예정")
+# ========================================
+st.divider()
+
+st.header("📉 그래프 3")
 
 st.write(
-    "새로운 그래프를 추가할 수 있도록 별도의 구역을 만들어 두었습니다."
+    "세 번째 그래프를 추가할 수 있는 공간입니다."
 )
 
-st.markdown("### 💡 이 그래프로 알 수 있는 것")
-st.info("여기에 해당 그래프를 통해 알 수 있는 내용을 작성하면 됩니다.")
+graph3_comment = st.text_area(
+    "이 그래프로 알 수 있는 것",
+    placeholder="그래프를 추가한 뒤, 이 그래프를 통해 알 수 있는 내용을 작성하세요.",
+    height=100,
+    key="graph3_comment"
+)
+
+if graph3_comment:
+    st.info(graph3_comment)
