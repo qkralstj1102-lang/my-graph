@@ -58,11 +58,9 @@ def load_data():
 
 # 데이터 불러오기
 try:
-
     df = load_data()
 
 except Exception as e:
-
     st.error("데이터를 불러오는 중 문제가 발생했습니다.")
     st.code(str(e))
     st.stop()
@@ -102,7 +100,7 @@ movie_df = movie_df.sort_values("날짜")
 
 
 # ----------------------------------------
-# 그래프 1 그리기
+# 그래프 1
 # ----------------------------------------
 
 fig1 = px.line(
@@ -117,14 +115,12 @@ fig1 = px.line(
     }
 )
 
-
 fig1.update_traces(
     hovertemplate=
     "날짜: %{x|%Y-%m-%d}<br>"
     "일관객: %{y:,}명"
     "<extra></extra>"
 )
-
 
 fig1.update_layout(
     height=500,
@@ -133,7 +129,6 @@ fig1.update_layout(
     yaxis_title="일관객 수(명)"
 )
 
-
 st.plotly_chart(
     fig1,
     use_container_width=True
@@ -141,7 +136,7 @@ st.plotly_chart(
 
 
 # ----------------------------------------
-# 그래프 1 설명 입력
+# 그래프 1 설명
 # ----------------------------------------
 
 st.subheader("💡 이 그래프로 알 수 있는 것")
@@ -153,9 +148,7 @@ graph1_comment = st.text_area(
     key="graph1_comment"
 )
 
-
 if graph1_comment:
-
     st.info(graph1_comment)
 
 
@@ -174,10 +167,7 @@ st.write(
 )
 
 
-# ----------------------------------------
 # 영화별 일관객 합계
-# ----------------------------------------
-
 movie_total = (
     df.groupby("영화명", as_index=False)["일관객"]
     .sum()
@@ -204,7 +194,7 @@ top5_df = top5_df.sort_values(
 
 
 # ----------------------------------------
-# 그래프 2 그리기
+# 그래프 2
 # ----------------------------------------
 
 fig2 = px.line(
@@ -221,7 +211,6 @@ fig2 = px.line(
     }
 )
 
-
 fig2.update_traces(
     hovertemplate=
     "영화: %{fullData.name}<br>"
@@ -230,7 +219,6 @@ fig2.update_traces(
     "<extra></extra>"
 )
 
-
 fig2.update_layout(
     height=600,
     hovermode="x unified",
@@ -238,7 +226,6 @@ fig2.update_layout(
     yaxis_title="일관객 수(명)",
     legend_title="영화"
 )
-
 
 st.plotly_chart(
     fig2,
@@ -251,7 +238,6 @@ st.plotly_chart(
 # ----------------------------------------
 
 st.write("### 🏆 이 기간 일관객 합계 상위 5편")
-
 
 ranking_df = movie_total.copy()
 
@@ -271,7 +257,6 @@ ranking_df = ranking_df.rename(
     }
 )
 
-
 st.dataframe(
     ranking_df,
     hide_index=True,
@@ -280,7 +265,7 @@ st.dataframe(
 
 
 # ----------------------------------------
-# 그래프 2 설명 입력
+# 그래프 2 설명
 # ----------------------------------------
 
 st.subheader("💡 이 그래프로 알 수 있는 것")
@@ -292,9 +277,7 @@ graph2_comment = st.text_area(
     key="graph2_comment"
 )
 
-
 if graph2_comment:
-
     st.info(graph2_comment)
 
 
@@ -313,10 +296,7 @@ st.write(
 )
 
 
-# ----------------------------------------
 # 날짜별 일관객 합계
-# ----------------------------------------
-
 daily_total = (
     df.groupby("날짜", as_index=False)["일관객"]
     .sum()
@@ -324,10 +304,7 @@ daily_total = (
 )
 
 
-# ----------------------------------------
 # 일관객 합계가 가장 큰 3일
-# ----------------------------------------
-
 top3_days = (
     daily_total
     .sort_values(
@@ -339,7 +316,7 @@ top3_days = (
 
 
 # ----------------------------------------
-# 영역 그래프
+# 그래프 3
 # ----------------------------------------
 
 fig3 = px.area(
@@ -354,29 +331,19 @@ fig3 = px.area(
 )
 
 
-# ----------------------------------------
 # 가장 관객이 많았던 3일 표시
-# ----------------------------------------
-
 for _, row in top3_days.iterrows():
 
     fig3.add_annotation(
-
         x=row["날짜"],
-
         y=row["일관객"],
-
         text=(
             f"<b>{row['날짜'].strftime('%Y-%m-%d')}</b><br>"
             f"{row['일관객']:,}명"
         ),
-
         showarrow=True,
-
         arrowhead=2,
-
         ax=0,
-
         ay=-60
     )
 
@@ -388,14 +355,12 @@ fig3.update_traces(
     "<extra></extra>"
 )
 
-
 fig3.update_layout(
     height=600,
     hovermode="x unified",
     xaxis_title="날짜",
     yaxis_title="10위권 일관객 합계(명)"
 )
-
 
 st.plotly_chart(
     fig3,
@@ -404,11 +369,10 @@ st.plotly_chart(
 
 
 # ----------------------------------------
-# 관객 합계가 가장 많았던 3일 표
+# 관객 합계가 가장 많았던 3일
 # ----------------------------------------
 
 st.write("### 🏆 일관객 합계가 가장 컸던 3일")
-
 
 top3_display = top3_days.copy()
 
@@ -423,7 +387,6 @@ top3_display = top3_display.rename(
     }
 )
 
-
 st.dataframe(
     top3_display,
     hide_index=True,
@@ -432,7 +395,7 @@ st.dataframe(
 
 
 # ----------------------------------------
-# 그래프 3 설명 입력
+# 그래프 3 설명
 # ----------------------------------------
 
 st.subheader("💡 이 그래프로 알 수 있는 것")
@@ -444,9 +407,7 @@ graph3_comment = st.text_area(
     key="graph3_comment"
 )
 
-
 if graph3_comment:
-
     st.info(graph3_comment)
 
 
@@ -466,16 +427,42 @@ st.write(
 
 
 # ----------------------------------------
-# 영화별 일관객 합계 + 10위권에 든 날수 계산
+# 영화별 통계 계산
 # ----------------------------------------
 
-movie_summary = (
-    df.groupby("영화명")
-    .agg(
-        기간_일관객_합계=("일관객", "sum"),
-        10위권_등장_일수=("날짜", "nunique")
-    )
+# 영화별 일관객 합계
+movie_sum = (
+    df.groupby("영화명")["일관객"]
+    .sum()
     .reset_index()
+)
+
+movie_sum = movie_sum.rename(
+    columns={
+        "일관객": "기간_일관객_합계"
+    }
+)
+
+
+# 영화별 10위권 등장 일수
+movie_days = (
+    df.groupby("영화명")["날짜"]
+    .nunique()
+    .reset_index()
+)
+
+movie_days = movie_days.rename(
+    columns={
+        "날짜": "10위권_등장_일수"
+    }
+)
+
+
+# 두 데이터 합치기
+movie_summary = pd.merge(
+    movie_sum,
+    movie_days,
+    on="영화명"
 )
 
 
@@ -495,11 +482,8 @@ top10_movies = (
 
 
 # ----------------------------------------
-# 그래프용 순서 설정
+# 그래프용 정렬
 # ----------------------------------------
-# Plotly 가로 막대그래프에서
-# 관객이 많은 영화가 위에 오도록
-# 작은 값부터 정렬한 뒤 reversed 사용
 
 top10_movies = top10_movies.sort_values(
     "기간_일관객_합계",
@@ -528,14 +512,14 @@ fig4 = px.bar(
 
 
 # ----------------------------------------
-# 마우스를 올렸을 때 표시되는 정보
+# 마우스를 올렸을 때 표시
 # ----------------------------------------
 
 fig4.update_traces(
     hovertemplate=
     "영화: %{y}<br>"
     "기간 내 일관객 합계: %{x:,}명<br>"
-    "개봉 후 10위권에 든 날수: %{customdata[0]}일"
+    "10위권에 든 날수: %{customdata[0]}일"
     "<extra></extra>"
 )
 
@@ -563,17 +547,17 @@ st.plotly_chart(
 
 st.write("### 🏆 영화별 TOP 10")
 
-
 top10_display = top10_movies.copy()
 
-top10_display["순위"] = range(
-    10,
-    0,
-    -1
+# 관객이 많은 순서대로 1~10위
+top10_display = top10_display.sort_values(
+    "기간_일관객_합계",
+    ascending=False
 )
 
-top10_display = top10_display.sort_values(
-    "순위"
+top10_display["순위"] = range(
+    1,
+    len(top10_display) + 1
 )
 
 top10_display = top10_display[
@@ -593,7 +577,6 @@ top10_display = top10_display.rename(
     }
 )
 
-
 st.dataframe(
     top10_display,
     hide_index=True,
@@ -602,7 +585,7 @@ st.dataframe(
 
 
 # ----------------------------------------
-# 그래프 4 설명 입력
+# 그래프 4 설명
 # ----------------------------------------
 
 st.subheader("💡 이 그래프로 알 수 있는 것")
@@ -614,9 +597,7 @@ graph4_comment = st.text_area(
     key="graph4_comment"
 )
 
-
 if graph4_comment:
-
     st.info(graph4_comment)
 
 
@@ -641,7 +622,5 @@ graph5_comment = st.text_area(
     key="graph5_comment"
 )
 
-
 if graph5_comment:
-
     st.info(graph5_comment)
